@@ -63,8 +63,6 @@ namespace DragonCombatSimulator
                         {
                             attacks++;
                             //No global RNG values here, broseph
-                            int dragDmg = rng.Next(5, 16);
-                            int dragHitChance = rng.Next(1, 101);
                             int swordHitChance = rng.Next(1, 101);
                             int swordDmg = rng.Next(20, 36);
 
@@ -74,50 +72,22 @@ namespace DragonCombatSimulator
                                 Console.WriteLine("You missed");
                             }
                             else
-                            {      
+                            {
                                 //70% of the time, you hit
                                 dragonHP = dragonHP - swordDmg;
                                 Console.WriteLine("You did " + swordDmg + " damage to the dragon!");
-                            }
-
-
-                            //20% chance for dragon to miss
-                            if (dragHitChance < 20)
-                            {
-                                Console.WriteLine("The dragon barely missed you!");
-                            }
-                            //Dragon does damage
-                            else
-                            {
-                                playerHP -= dragDmg;
-                                Console.WriteLine("The dragon slaps you in the face for " + dragDmg + " damage!");
                             }
                         }
                         //Magic attack, 100% hit
                         else if (choice == 2)
                         {
                             attacks++;
-                            int dragDmg = rng.Next(5, 16);
-                            int dragHitChance = rng.Next(1, 101);
                             int hitChance = rng.Next(1, 101);
                             int magicDmg = rng.Next(10, 16);
-
 
                             //You hit the dragon for between 10-15 damage
                             dragonHP -= magicDmg;
                             Console.WriteLine("You did " + magicDmg + " damage to the dragon!");
-
-                            //Dragon misses 20% of the time
-                            if (dragHitChance < 20)
-                            {
-                                Console.WriteLine("The dragon barely missed you!");
-                            }
-                            //Take damage from dragon
-                            else
-                            {
-                                playerHP -= dragDmg;
-                                Console.WriteLine("The dragon slaps you in the face for " + dragDmg + " damage!");
-                            }
                         }
                         //Heal yourself for 10-20 HP
                         else if (choice == 3)
@@ -130,6 +100,19 @@ namespace DragonCombatSimulator
                         else
                         {
                             Console.WriteLine("Please enter either 1, 2 or 3");
+                        }
+                        //Dragon misses 20% of the time
+                        int dragDmg = rng.Next(5, 16);
+                        int dragHitChance = rng.Next(1, 101);
+                        if (dragHitChance < 20)
+                        {
+                            Console.WriteLine("The dragon barely missed you!");
+                        }
+                        //Take damage from dragon
+                        else
+                        {
+                            playerHP -= dragDmg;
+                            Console.WriteLine("The dragon slaps you in the face for " + dragDmg + " damage!");
                         }
                     }
                 Console.WriteLine("Dragon HP: " + dragonHP);
