@@ -15,6 +15,42 @@ namespace DragonCombatSimulator
             Console.ReadKey();
         }
 
+        static void AddHighScore(int playerScore)
+        {
+            Console.WriteLine("Add your name to the high score list: ");
+            string playerName = Console.ReadLine();
+
+            //Create a gateway to the database
+            KevinEntities db = new KevinEntities();
+
+            //Create new high score object
+            HighScore newHighScore = new HighScore();
+            newHighScore.DateCreated = DateTime.Now;
+            newHighScore.Game = "Dragon Slayer";
+            newHighScore.Name = playerName;
+            newHighScore.Score = playerScore;
+
+            //Add it to the database
+            db.HighScores.Add(newHighScore);
+
+            //Save changes to db
+            db.SaveChanges();
+        }
+
+        static void DisplayHighScores()
+        {
+            Console.Clear();
+            Console.WriteLine("Dragon Slayer High Scores");
+            Console.WriteLine("-----------------------------");
+
+            KevinEntities db = new KevinEntities();
+            List<HighScore> highScoreList = db.HighScores.Where(x => x.Game == "Dragon Slayer").OrderBy(x => x.Score).Take(10).ToList();
+            foreach (HighScore i in highScoreList)
+            {
+                Console.WriteLine("{0}. {1} - {2} - {3}", highScoreList.IndexOf(i) + 1, i.Name, i.Score, i.DateCreated.Value.ToShortDateString());
+            }
+        }
+
         static void DragonCombatSimulator()
         {
             //Keep track of HP values and attack count
@@ -33,7 +69,7 @@ namespace DragonCombatSimulator
                   __/ |                                                         __/ |                      
                  |___/                                                         |___/                        ");
             //Explain the game
-            Console.WriteLine("DRAGOOOOONNNNN COMBAAAATTTTTT.\n In tihs game, you are a dungeon trying to kill a dragon. You have 3 options for how to fight the dragon.\n 1. Throw brick (70% hit, 20-35 damage)\n 2. Dust attack (100% hit, 10-15 damage)\n 3. Heal (Repair self for 10-20 HP)\nPlease choose an action.\n");
+            Console.WriteLine("DRAGOOOOONNNNN COMBAAAATTTTTT.\n In this game, you are a dungeon trying to kill a dragon. You have 3 options for how to fight the dragon.\n 1. Throw brick (70% hit, 20-35 damage)\n 2. Dust attack (100% hit, 10-15 damage)\n 3. Heal (Repair self for 10-20 HP)\nPlease choose an action.\n");
 
             //Bool for exiting while loop
             bool playing = true;
@@ -110,7 +146,9 @@ namespace DragonCombatSimulator
                     else if (dragonHP <= 0)
                     {
                         Console.Clear();
-                        Console.WriteLine("DUNGEONS ARE BETTER THAN DRAGONS.");
+                        Console.WriteLine("You have slain the enemy.");
+                        AddHighScore(attacks);
+                        DisplayHighScores();
                         playing = false;
                     }
                 }
